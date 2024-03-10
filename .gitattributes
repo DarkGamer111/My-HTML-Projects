@@ -1,2 +1,29 @@
 # Auto detect text files and perform LF normalization
 * text=auto
+def adventure_game():
+    print("Welcome to the Adventure Game!")
+    print("You find yourself at the entrance of a dark forest. Do you enter? (yes/no)")
+
+    choice = input("> ").lower()
+    if choice == 'yes':
+        print("You bravely step into the forest.")
+        print("After walking for a while, you see a bear. Do you run or stay still? (run/stay)")
+
+        bear_choice = input("> ").lower()
+        if bear_choice == 'run':
+            print("You ran as fast as you could and safely exited the forest. You win!")
+        elif bear_choice == 'stay':
+            print("You stayed very still. The bear sniffed you and walked away. You continue your adventure and find a treasure chest. You win!")
+        else:
+            print("Invalid choice. Game over.")
+    elif choice == 'no':
+        print("You decide not to enter the forest. Game over.")
+    else:
+        print("Invalid choice. Game over.")
+
+    play_again = input("Play again? (yes/no): ").lower()
+    if play_again == 'yes':
+        adventure_game()
+
+if __name__ == "__main__":
+    adventure_game()
