@@ -1,0 +1,92 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Rock, Paper, Scissors Game</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            margin: 50px;
+            transition: background-color 0.5s ease;
+        }
+
+        h1 {
+            color: rgb(0, 0, 0);
+        }
+
+        #result {
+            font-size: 1.5em;
+            margin-top: 20px;
+        }
+
+        img {
+            width: 100px;
+            margin: 10px;
+            cursor: pointer;
+        }
+
+        #playAgain {
+            display: none;
+            margin-top: 20px;
+            cursor: pointer;
+            color: blue;
+            text-decoration: underline;
+        }
+    </style>
+</head>
+
+<body>
+
+    <h1>Rock, Paper, Scissors Game</h1>
+
+    <p>Choose your move:</p>
+    <img src="rock.png" alt="Rock" onclick="playGame('rock')">
+    <img src="paper.png" alt="Paper" onclick="playGame('paper')">
+    <img src="scissors.png" alt="Scissors" onclick="playGame('scissors')">
+
+    <div id="result"></div>
+
+    <div id="playAgain" onclick="resetGame()">Play Again</div>
+
+    <script>
+        function playGame(playerChoice) {
+            const choices = ['rock', 'paper', 'scissors'];
+            const computerChoice = choices[Math.floor(Math.random() * choices.length)];
+
+            document.getElementById("result").innerHTML = `
+                <p>Your choice: ${playerChoice}</p>
+                <p>Computer's choice: ${computerChoice}</p>`;
+
+            if (playerChoice === computerChoice) {
+                document.getElementById("result").innerHTML += "It's a tie!";
+            } else if (
+                (playerChoice === 'rock' && computerChoice === 'scissors') ||
+                (playerChoice === 'paper' && computerChoice === 'rock') ||
+                (playerChoice === 'scissors' && computerChoice === 'paper')
+            ) {
+                document.getElementById("result").innerHTML += "You win!";
+                changeBackgroundColor('green');
+            } else {
+                document.getElementById("result").innerHTML += "Computer wins!";
+                changeBackgroundColor('red');
+            }
+
+            document.getElementById("playAgain").style.display = "block";
+        }
+
+        function resetGame() {
+            document.getElementById("result").innerHTML = "";
+            document.getElementById("playAgain").style.display = "none";
+            changeBackgroundColor('');
+        }
+
+        function changeBackgroundColor(color) {
+            document.body.style.backgroundColor = color;
+        }
+    </script>
+
+</body>
+
+</html>

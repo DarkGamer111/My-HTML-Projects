@@ -1,0 +1,142 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Simple Pong Game</title>
+    <style>
+        body {
+            margin: 0;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            height: 100vh;
+            background-color: black;
+        }
+
+        canvas {
+            border: 1px solid white;
+        }
+
+        button {
+            margin-top: 10px;
+            font-size: 16px;
+            padding: 5px 10px;
+            cursor: pointer;
+            background-color: #333;
+            color: #fff;
+            border: none;
+            border-radius: 5px;
+        }
+    </style>
+</head>
+<body>
+
+    <canvas id="pongCanvas" width="800" height="400"></canvas>
+    <button id="pauseButton" onclick="togglePause()">Pause</button>
+
+    <script>
+        const canvas = document.getElementById("pongCanvas");
+        const ctx = canvas.getContext("2d");
+        let gamePaused = false;
+
+        // Paddle
+        const paddleWidth = 10, paddleHeight = 60;
+        let leftPaddleY = canvas.height / 2 - paddleHeight / 2;
+        let rightPaddleY = canvas.height / 2 - paddleHeight / 2;
+        const paddleSpeed = 20; // Increased speed for the left paddle
+
+        // Ball
+        let ballX = canvas.width / 2;
+        let ballY = canvas.height / 2;
+        let ballSpeedX = 5;
+        let ballSpeedY = 5;
+
+        function draw() {
+            // Clear the canvas
+            ctx.clearRect(0, 0, canvas.width, canvas.height);
+
+            // Draw paddles
+            ctx.fillStyle = "#fff";
+            ctx.fillRect(0, leftPaddleY, paddleWidth, paddleHeight);
+            ctx.fillRect(canvas.width - paddleWidth, rightPaddleY, paddleWidth, paddleHeight);
+
+            // Draw ball
+            ctx.beginPath();
+            ctx.arc(ballX, ballY, 8, 0, Math.PI * 2);
+            ctx.fill();
+            ctx.closePath();
+
+            // Move ball
+            ballX += ballSpeedX;
+            ballY += ballSpeedY;
+
+            // Bounce off top and bottom
+            if (ballY <= 0 || ballY >= canvas.height) {
+                ballSpeedY = -ballSpeedY;
+            }
+
+            // Bounce off paddles
+            if (
+                (ballX <= paddleWidth && ballY > leftPaddleY && ballY < leftPaddleY + paddleHeight) ||
+                (ballX >= canvas.width - paddleWidth && ballY > rightPaddleY && ballY < rightPaddleY + paddleHeight)
+            ) {
+                ballSpeedX = -ballSpeedX;
+            }
+
+            // Reset ball if it goes out of bounds
+            if (ballX <= 0 || ballX >= canvas.width) {
+                ballX = canvas.width / 2;
+                ballY = canvas.height / 2;
+            }
+
+            // Move right paddle
+            if (rightPaddleY + paddleHeight / 2 < ballY) {
+                rightPaddleY += paddleSpeed;
+            } else {
+                rightPaddleY -= paddleSpeed;
+            }
+
+            // Ensure paddles stay within the canvas
+            leftPaddleY = Math.max(0, Math.min(leftPaddleY, canvas.height - paddleHeight));
+            rightPaddleY = Math.max(0, Math.min(rightPaddleY, canvas.height - paddleHeight));
+        }
+
+        function gameLoop() {
+            if (!gamePaused) {
+                draw();
+                requestAnimationFrame(gameLoop);
+            }
+        }
+
+        function togglePause() {
+            gamePaused = !gamePaused;
+            const pauseButton = document.getElementById("pauseButton");
+            pauseButton.textContent = gamePaused ? "Resume" : "Pause";
+
+            if (!gamePaused) {
+                // Resume the game loop
+                gameLoop();
+            }
+        }
+
+        // Keyboard controls for the left paddle
+        window.addEventListener("keydown", function (event) {
+            switch (event.key) {
+                case "ArrowUp":
+                    leftPaddleY -= paddleSpeed;
+                    break;
+                case "ArrowDown":
+                    leftPaddleY += paddleSpeed;
+                    break;
+            }
+        });
+
+        // Start the game loop initially
+        gameLoop();
+    </script>
+
+</body>
+</html>
+
+
